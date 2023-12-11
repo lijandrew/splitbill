@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Split Bill</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz@6..12&display=swap");
+      * {
+        font-family: "Nunito Sans";
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>Subtotal (costs of dishes)</div>
+    <textarea id="subtotal" cols="20" rows="10"></textarea>
+    <br />
+    <br />
+
+    <div>Personal (cost of your dishes)</div>
+    <textarea id="personal" cols="20" rows="10"></textarea>
+    <br />
+    <br />
+
+    <div>Proportionate (proportionate fees - tax, tip, etc.)</div>
+    <textarea id="proportionate" cols="20" rows="10"></textarea>
+    <br />
+    <br />
+
+    <div>You owe: <span id="owe">error</span></div>
+
+    <script>
+      const sumTextarea = (elem) => {
+        const items = elem.value.split("\n");
+        let sum = 0;
+        for (const item of items) {
+          if (isNaN(item)) {
+            return NaN;
+          }
+          sum += Number(item);
+        }
+        return sum;
+      };
+      const subtotalElem = document.querySelector("#subtotal");
+      const personalElem = document.querySelector("#personal");
+      const proportionateElem = document.querySelector("#proportionate");
+      const oweElem = document.querySelector("#owe");
+      let subtotal = 0;
+      let personal = 0;
+      let proportionate = 0;
+      let owe = 0;
+      document.addEventListener("keyup", () => {
+        subtotal = sumTextarea(subtotalElem);
+        personal = sumTextarea(personalElem);
+        proportionate = sumTextarea(proportionateElem);
+        owe = personal + proportionate * (personal / subtotal);
+        oweElem.textContent = isNaN(owe) ? "error" : owe;
+      });
+    </script>
+  </body>
+</html>
